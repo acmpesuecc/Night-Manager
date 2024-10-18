@@ -24,7 +24,6 @@ void update_file_list() {
     }
 }
 
-// Function to handle item selection
 void on_item_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *col, gpointer user_data) {
     GtkTreeModel *model;
     GtkTreeIter iter;
@@ -53,6 +52,7 @@ void on_item_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewCol
 int main(int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *scrolled_window;
+    GtkWidget *vbox;  // Declaration of the vbox widget
     GtkListStore *list_store;
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
@@ -61,8 +61,7 @@ int main(int argc, char *argv[]) {
 
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window), "File Manager");
-    gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
-    gtk_window_set_resizable(GTK_WINDOW(window), TRUE)
+    gtk_window_set_default_size(GTK_WINDOW(window), 600, 400);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
@@ -73,13 +72,11 @@ int main(int argc, char *argv[]) {
     gtk_box_pack_start(GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);
 
     list_store = gtk_list_store_new(1, G_TYPE_STRING);
-
     file_list = gtk_tree_view_new_with_model(GTK_TREE_MODEL(list_store));
-    gtk_container_add(GTK_CONTAINER(scrolled_window), file_list);
-
     renderer = gtk_cell_renderer_text_new();
     column = gtk_tree_view_column_new_with_attributes("Files", renderer, "text", 0, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(file_list), column);
+    gtk_container_add(GTK_CONTAINER(scrolled_window), file_list);
 
     g_signal_connect(file_list, "row-activated", G_CALLBACK(on_item_activated), NULL);
 
@@ -91,4 +88,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-//gcc -o file_manager file_manager.c `pkg-config --cflags --libs gtk+-3.0`
